@@ -109,6 +109,55 @@ Content-Type: application/json
 }
 ```
 
+
+## Race Condition Handling
+
+### Booking Transactions
+The project uses Prisma's transactions to handle concurrent bookings and prevent race conditions:
+
+```javascript
+const booking = await prisma.$transaction(async (prisma) => {
+    // 1. Check seat availability in a transaction
+    const train = await prisma.train.findUnique({
+        where: { id: trainId }
+    });
+
+    if (!train || train.seats < requestedSeats) {
+        throw new Error('Insufficient seats');
+    }
+
+    // 2. Create booking and update seats atomically
+    const newBooking = await prisma.booking.create({
+        data: {
+            userId,
+            trainId,
+            seats: requestedSeats,
+            status: 'CONFIRMED'
+        }
+    });
+
+    // 3. Update train seats
+    await prisma.train.update({
+        where: { id: trainId },
+        data: { seats: train.seats - requestedSeats }
+    });
+
+    return newBooking;
+});
+```
+
+### Transaction Benefits
+- **Atomicity**: Either the entire booking process succeeds or fails
+- **Isolation**: Concurrent bookings don't interfere with each other
+- **Consistency**: Seat count remains accurate even with simultaneous bookings
+- **Deadlock Prevention**: Prisma handles transaction conflicts automatically
+
+### Race Condition Examples Prevented:
+1. Two users booking last seat simultaneously
+2. Overbooking beyond available seats
+3. Inconsistent seat counts due to concurrent updates
+
+// ...existing code...
 ## Project Structure
 ```
 irctc-api/
