@@ -6,8 +6,8 @@ A RESTful API for train booking system using Express.js and Prisma ORM.
 
 ### 1. Clone and Install Dependencies
 ```bash
-git clone <repository-url>
-cd irctc-api
+git clone https://github.com/Allmight-456/irctc_api_express_postgres.git
+cd irctc_api_express_postgres
 npm install
 ```
 
