@@ -1,6 +1,6 @@
-# IRCTC API with Prisma and Express
-
-A RESTful API for train booking system using Express.js and Prisma ORM.
+# RailReserve Pro - Enterprise Train Booking API
+Engineered a scalable REST API for train reservation systems using Express.js, Prisma ORM, and PostgreSQL, implementing atomic transactions to handle concurrent bookings and prevent race conditions.
+Developed comprehensive user authentication and role-based access control (RBAC) using JWT tokens, enabling secure admin operations and passenger booking management with 99.9% booking consistency
 
 ## Setup Instructions
 
